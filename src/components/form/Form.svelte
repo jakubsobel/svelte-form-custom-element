@@ -1,59 +1,48 @@
 <script type="text/typescript">
-  import { User, user } from "./store.js";
+  import { form, field } from "svelte-forms";
+  import {
+    required,
+    email as emailValidator,
+    pattern,
+  } from "svelte-forms/validators";
 
-  const text: string = "Hello World";
-  let error: string = "";
-
-  function isFormValid(userData: User): boolean {
-    if (!isRequiredFieldValid(userData.email)) {
-      return false;
-    }
-
-    if (!isRequiredFieldValid(userData.phone)) {
-      return false;
-    }
-    return true;
-  }
-
-  function isRequiredFieldValid(value: string) {
-    return !!value;
-  }
-
-  function onSubmit(e: SubmitEvent) {
-    const formData = new FormData(e.target as HTMLFormElement);
-
-    const userData: User = {
-      name: formData.get("name").toString(),
-      email: formData.get("email").toString(),
-      phone: formData.get("phone").toString(),
-    };
-
-    if (isFormValid(userData)) {
-      error = "";
-      user.set(userData);
-    } else {
-      error = "Form is not valid";
-    }
-  }
+  const name = field("name", "", [required()]);
+  const email = field("email", "", [required(), emailValidator()]);
+  const phone = field("phone", "", [required(), pattern(/\d+/)]);
+  const myForm = form(name, email, phone);
 </script>
 
 <div class="form-section">
   <h1>This is a form title</h1>
   <p class="description">This is a form description</p>
-  <p>{error || text}</p>
 
-  <form on:submit|preventDefault={onSubmit} class="content">
+  <section class="content">
     <label for="name">Name</label>
-    <input type="text" name="name" />
+    <input type="text" name="name" bind:value={$name.value} />
+    {#if $myForm.hasError("name.required")}
+      <div class="error">Name is required</div>
+    {/if}
     <label for="email">E-mail</label>
-    <input type="text" name="email" />
+    <input type="text" name="email" bind:value={$email.value} />
+    {#if $myForm.hasError("email.required")}
+      <div class="error">E-mail is required</div>
+    {/if}
+    {#if $myForm.hasError("email.not_an_email")}
+      <div class="error">Provide correct email</div>
+    {/if}
     <label for="phone">Phone</label>
-    <input type="text" name="phone" />
-    <button type="submit">Submit</button>
-  </form>
+    <input type="text" name="phone" bind:value={$phone.value} />
+    {#if $myForm.hasError("phone.required")}
+      <div class="error">Phone is required</div>
+    {/if}
+    {#if $myForm.hasError("phone.pattern")}
+      <div class="error">Provide correct phone</div>
+    {/if}
+    <button on:click={myForm.validate}>Submit</button>
+  </section>
 
   <p>
-    {JSON.stringify($user, null, 2)}
+    {JSON.stringify($myForm, null, 2)}
   </p>
 </div>
 
@@ -69,6 +58,10 @@
 
     .description {
       color: $blue;
+    }
+
+    .error {
+      color: $red;
     }
   }
 </style>
