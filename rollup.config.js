@@ -54,6 +54,14 @@ export default {
         dev: !production,
         customElement: true,
       },
+
+      // TODO: better unused css selector handling (silence only tailwind warnings somehow)
+      onwarn: (warning, handler) => {
+        const { code } = warning;
+        if (code === "css-unused-selector") return;
+
+        handler(warning);
+      },
     }),
 
     // If you have external dependencies installed from
