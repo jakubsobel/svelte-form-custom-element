@@ -1,3 +1,5 @@
+<svelte:options tag="test-form" />
+
 <script lang="ts">
   import { form, field } from "svelte-forms";
   import {
@@ -15,7 +17,9 @@
 <div
   class="p-8 shadow-md rounded-lg bg-slate-300 backdrop-blur-sm bg-opacity-75 flex flex-col justify-center"
 >
-  <h1 class="text-2xl text-center text-slate-800">This is a form title</h1>
+  <h1 class="text-2xl text-center text-slate-800 title">
+    This is a form title
+  </h1>
   <p class="text-lg text-center text-slate-800">This is a form description</p>
 
   <section class="flex flex-col justify-center">
@@ -73,3 +77,13 @@
       2
     )}</pre>
 </div>
+
+<style lang="postcss">
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  .title {
+    color: red;
+  }
+</style>
