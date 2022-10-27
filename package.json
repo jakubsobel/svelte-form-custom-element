@@ -35,5 +35,11 @@
   "main": "public/build/bundle.js",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "require": "./public/build/bundle.cjs",
+      "import": "./public/build/bundle.mjs"
+    }
   }
 }

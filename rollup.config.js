@@ -35,12 +35,26 @@ function serve() {
 
 export default {
   input: "src/main.ts",
-  output: {
-    sourcemap: !production,
-    format: "iife",
-    name: "app",
-    file: "public/build/bundle.js",
-  },
+  output: [
+    {
+      sourcemap: !production,
+      format: "iife",
+      name: "app",
+      file: "public/build/bundle.js",
+    },
+    {
+      sourcemap: !production,
+      format: "es",
+      name: "app",
+      file: "public/build/bundle.mjs",
+    },
+    {
+      sourcemap: !production,
+      format: "cjs",
+      name: "app",
+      file: "public/build/bundle.cjs",
+    },
+  ],
   plugins: [
     svelte({
       preprocess: sveltePreprocess({
